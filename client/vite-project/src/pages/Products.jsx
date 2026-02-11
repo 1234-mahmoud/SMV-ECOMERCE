@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { fetchProducts } from "../store/productSlice";
 import { addToCart } from "../store/cartSlice";
 
@@ -25,16 +24,14 @@ export default function Products() {
               `}
             key={p._id}
           >
-            <Link to={`/products/${p._id}`}>
-              <img
-                src={p.images && p.images.length > 0 ? `http://localhost:3000${p.images[0]}` : "/fallback.jpg"}
-                alt={p.title}
-                className={`w-full h-49 shrink-0 object-contain rounded-md
-                  transition-all ease-in-out duration-300
-                  md:hover:scale-110
-                  `}
-              />
-            </Link>
+            <img
+              src={p.images && p.images.length > 0 ? `http://localhost:3000${p.images[0]}` : "/fallback.jpg"}
+              alt={p.title}
+              className={`w-full h-49 shrink-0 object-contain rounded-md
+                transition-all ease-in-out duration-300
+                md:hover:scale-110
+                `}
+            />
             <span className="text-lg font-semibold">{p.title}</span>
             <span className="text-md font-bold text-indigo-500">{p.price}$</span>
             <button

@@ -30,25 +30,24 @@ const cartSlice = createSlice({
       const product = action.payload;
       // Normalize ID: use _id if id doesn't exist (MongoDB uses _id)
       const productId = product.id || product._id;
-      const quantityToAdd = product.quantity && product.quantity > 0 ? product.quantity : 1;
       const existingItem = state.items.find(
         (item) => (item.id || item._id) === productId
       );
 
       if (existingItem) {
-        existingItem.quantity += quantityToAdd;
-        existingItem.totalPrice += product.price * quantityToAdd;
+        existingItem.quantity++;
+        existingItem.totalPrice += product.price;
       } else {
         state.items.push({
           ...product,
           id: productId, // Ensure id field exists
           _id: product._id, // Keep _id for reference
-          quantity: quantityToAdd,
-          totalPrice: product.price * quantityToAdd,
+          quantity: 1,
+          totalPrice: product.price,
         });
       }
 
-      state.totalAmount += product.price * quantityToAdd;
+      state.totalAmount += product.price;
     },
 
     increment(state, action) {

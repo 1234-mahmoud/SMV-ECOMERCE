@@ -9,7 +9,6 @@ import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Categories from "./pages/Categories";
 import Products from "./pages/Products";
-import ProductDetails from "./pages/ProductDetails";
 
 function App() {
   return (
@@ -22,7 +21,6 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/categories" element={<Categories />} />
       <Route path="/products" element={<Products />} />
-      <Route path="/products/:id" element={<ProductDetails />} />
 
       {/* Protected Routes for no saved tokens*/}
       <Route

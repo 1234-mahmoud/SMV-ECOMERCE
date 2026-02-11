@@ -22,9 +22,15 @@ export default function Login() {
 
     const result = await dispatch(loginUser({ email, password, role }));
     
-    if (loginUser.fulfilled.match(result)) {
-      navigate("/");
-    }
+   if (loginUser.fulfilled.match(result)) {
+  const userRole = result.payload.user.role;
+
+  if (userRole === "Admin") {
+    navigate("/dashboard");
+  } else {
+    navigate("/");
+  }
+}
   };
 
   return (

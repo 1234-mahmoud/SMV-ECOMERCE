@@ -91,23 +91,6 @@ app.get("/products", async (req, res) => {
   }
 });
 
-// Get single product by id
-app.get("/products/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const product = await ProductModel.findById(id);
-
-    if (!product) {
-      return res.status(404).json({ error: "Product not found" });
-    }
-
-    res.status(200).json(product);
-  } catch (error) {
-    console.error("Error fetching product:", error);
-    res.status(500).json({ error: "Failed to fetch product", message: error.message });
-  }
-});
-
 // ================== AUTH MIDDLEWARE ==================
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
