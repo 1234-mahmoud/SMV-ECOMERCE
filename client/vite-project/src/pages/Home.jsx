@@ -1,19 +1,15 @@
-import React from 'react'
+import React from "react";
 import Hero from "../components/Hero";
 import Products from "./Products";
 import Categories from "./Categories";
-import Dashboard from './Dashboard';
-import CreateProduct from './CreateProduct';
 export default function Home() {
   return (
     <div>
-       <Hero />
+      <Hero />
       <div className="container m-auto">
-        <Categories/>
-        <CreateProduct/>
+        <Categories />
         <Products />
       </div>
-      {/* <Dashboard/> */}
     </div>
-  )
+  );
 }

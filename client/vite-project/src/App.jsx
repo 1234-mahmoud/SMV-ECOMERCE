@@ -12,6 +12,7 @@ import Products from "./pages/Products";
 import Orders from "./components/Orders";
 import Analatics from "./components/Analatics";
 import WishList from "./components/WishList";
+import CreateProduct from "./pages/CreateProduct";
 
 function App() {
   return (
@@ -50,7 +51,7 @@ function App() {
           path="/seller/dashboard"
           element={
             <ProtectedRoute role="Seller">
-              <Dashboard comp={<Orders />} />
+              <Dashboard comp={<CreateProduct/>} />
             </ProtectedRoute>
           }
         />
