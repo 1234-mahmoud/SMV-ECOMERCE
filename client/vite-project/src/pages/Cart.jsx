@@ -7,7 +7,9 @@ export default function Cart() {
     const dispatch = useDispatch();
 
     return (
-        <div className={`container mx-auto my-10 p-3`}>
+        <div className={`container mx-auto my-10 p-3
+        flex flex-col justify-center items-center gap-10
+        `}>
             <h1 className="text-2xl font-bold my-10">Shopping Cart</h1>
             <h3>Total Cart Price: ${totalAmount}</h3>
 
@@ -96,6 +98,7 @@ export default function Cart() {
                     })
                 }
 
+            </div>
                 <div
                     className={`flex flex-col gap-3 shadow-2xl p-3 rounded-md 
                     w-full md:w-150`}
@@ -136,7 +139,6 @@ export default function Cart() {
                         Proceed To Checkout
                     </button>
                 </div>
-            </div>
         </div>
     );
 }
