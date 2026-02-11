@@ -16,8 +16,8 @@ export default function Dashboard({ comp }) {
 
   // 👇 وظيفة تسجيل الخروج
   const handleLogout = () => {
-    dispatch(logout());      // مسح بيانات المستخدم
-    navigate("/login");      // الرجوع لصفحة تسجيل الدخول
+    dispatch(logout());      // Clear user Data
+    navigate("/login");      // return to login page 
   };
 
   return (
@@ -25,12 +25,12 @@ export default function Dashboard({ comp }) {
       className={`
         grid h-lvh md:h-[calc(100lvh-80px)]
         transition-all duration-500 ease-in-out
-        ${isOpen ? "grid-cols-[250px_1fr]" : "grid-cols-[80px_1fr]"}
+        ${isOpen ? "grid-cols-1 md:grid-cols-[250px_1fr]" : "grid-cols-[80px_1fr]"}
       `}
     >
       {/* Sidebar */}
       <div className="relative z-10 bg-[#1e293b]">
-        {/* زر فتح/إغلاق */}
+        {/* close/open button*/}
         <RiArrowLeftCircleLine
           color="rgba(255,255,255,1)"
           className={`
@@ -40,7 +40,7 @@ export default function Dashboard({ comp }) {
           onClick={() => dispatch(toggleSidebar())}
         />
 
-        {/* قائمة الروابط */}
+        {/* Links List*/}
         <div className="flex flex-col gap-5 p-5 mt-20 text-white font-semibold">
           <Link
             to="/orders"
@@ -100,7 +100,10 @@ export default function Dashboard({ comp }) {
       </div>
 
       {/* Main Content */}
-      <div className="p-6 bg-gray-50 w-full">{comp}</div>
+      <div className={`p-2 md:p-6 bg-gray-50 w-full
+      md:container md:m-auto
+        ${isOpen?"hidden":""}
+        `}>{comp}</div>
     </div>
   );
 }
