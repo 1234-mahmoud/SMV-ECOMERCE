@@ -1,48 +1,43 @@
-import React from "react";
-import img from "../assets/img.jpg";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { baseURL } from "../utils/axiosConfig";
+import { fetchCategories } from "../store/categorySlice";
+
 export default function Categories() {
-  const catego_data = [
-    {
-      id: 1,
-      img: "",
-      name: "Electronics",
-    },
-    {
-      id: 2,
-      img: "",
-      name: "Fashion",
-    },
-    {
-      id: 3,
-      img: "",
-      name: "Home & Kitchen",
-    },
-    {
-      id: 4,
-      img: "",
-      name: "Sports",
-    },
-  ];
+  const dispatch = useDispatch();
+  const { list: categories, loading } = useSelector((state) => state.categories);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
   return (
     <div className={`section-margin bg-gray-50 p-4 `}>
       <h1 className={`main-title font-bold my-5`}>Popular Categories</h1>
       <div className={`flex justify-center items-center gap-5 flex-wrap`}>
-        {catego_data.map((c) => (
-          <div
-            className={`bg-white rounded-md p-3 flex flex-col justify-center items-center gap-3 basis-75 
+        {loading ? (
+          <span className={`text-lg font-semibold`}>Loading...</span>
+        ) : (
+          categories.map((c) => (
+            <div
+              className={`bg-white rounded-md p-3 flex flex-col justify-center items-center gap-3 basis-80 h-75 
                 shadow-gray-400 shadow-xl
                 `}
-            key={c.id}
-          >
-            <img
-              src={img}
-              alt="pic"
-              className={`w-30 h-30 shrink-0 object-fit rounded-full`}
-            />
-            <span className={`text-lg font-semibold`}>{c.name}</span>
-          </div>
-        ))}
+              key={c._id}
+            >
+              {c.image ? (
+                <img
+                  src={c.image.startsWith("http") ? c.image : `${baseURL}${c.image}`}
+                  alt={c.name}
+                  className={`w-60 h-60 shrink-0 object-contain rounded-full`}
+                />
+              ) : (
+                <div className={`w-24 h-24 shrink-0 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm`} aria-hidden />
+              )}
+              <span className={`text-lg font-semibold`}>{c.name}</span>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

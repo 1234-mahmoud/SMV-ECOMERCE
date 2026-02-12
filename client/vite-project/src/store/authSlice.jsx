@@ -1,18 +1,20 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// Login thunk  --> action name , Payload 
-//loginData --> email , password , role
+const API_URL = "http://localhost:3000";
+
+// ================= LOGIN =================
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (loginData, { rejectWithValue }) => {
     try {
-      const res = await axios.post("http://localhost:3000/login", loginData);
-      // Store token in localStorage
+      const res = await axios.post(`${API_URL}/login`, loginData);
+
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
       }
+
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -22,17 +24,18 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-// Register thunk
+// ================= REGISTER =================
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (registerData, { rejectWithValue }) => {
     try {
-      const res = await axios.post("http://localhost:3000/register", registerData);
-      // Store token in localStorage
+      const res = await axios.post(`${API_URL}/register`, registerData);
+
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
       }
+
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -42,25 +45,28 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-// Verify token thunk
+// ================= VERIFY TOKEN =================
 export const verifyToken = createAsyncThunk(
   "auth/verifyToken",
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
+
       if (!token) {
         throw new Error("No token found");
       }
-      const res = await axios.get("http://localhost:3000/verifyToken", {
+
+      const res = await axios.get(`${API_URL}/verifyToken`, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,   // ✅ التصحيح هنا
+        },
       });
+
       return res.data;
     } catch (error) {
-      // Remove invalid token
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+
       return rejectWithValue(
         error.response?.data?.error || "Token verification failed"
       );
@@ -68,11 +74,12 @@ export const verifyToken = createAsyncThunk(
   }
 );
 
-// Load initial state from localStorage
+// ================= LOAD INITIAL STATE =================
 const loadInitialState = () => {
   try {
     const token = localStorage.getItem("token");
     const userStr = localStorage.getItem("user");
+
     if (token && userStr) {
       return {
         token,
@@ -85,6 +92,7 @@ const loadInitialState = () => {
   } catch (error) {
     console.error("Error loading auth state:", error);
   }
+
   return {
     token: null,
     user: null,
@@ -94,6 +102,7 @@ const loadInitialState = () => {
   };
 };
 
+// ================= SLICE =================
 const authSlice = createSlice({
   name: "auth",
   initialState: loadInitialState(),
@@ -111,7 +120,7 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Login cases
+      // LOGIN
       .addCase(loginUser.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -128,7 +137,8 @@ const authSlice = createSlice({
         state.error = action.payload;
         state.isAuthenticated = false;
       })
-      // Register cases
+
+      // REGISTER
       .addCase(registerUser.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -145,7 +155,8 @@ const authSlice = createSlice({
         state.error = action.payload;
         state.isAuthenticated = false;
       })
-      // Verify token cases
+
+      // VERIFY TOKEN
       .addCase(verifyToken.fulfilled, (state, action) => {
         state.isAuthenticated = true;
         state.user = action.payload.user;

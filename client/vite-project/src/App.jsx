@@ -10,9 +10,9 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import Categories from "./pages/Categories";
 import Products from "./pages/Products";
 import Orders from "./components/Orders";
-import Analatics from "./components/Analatics";
 import WishList from "./components/WishList";
 import CreateProduct from "./pages/CreateProduct";
+import Admin from "./pages/Admin";
 
 function App() {
   return (
@@ -41,7 +41,7 @@ function App() {
           path="/admin/dashboard"
           element={
             <ProtectedRoute role="Admin">
-              <Dashboard comp={<Analatics />} />
+              <Dashboard comp={<Admin />} />
             </ProtectedRoute>
           }
         />
@@ -55,14 +55,24 @@ function App() {
             </ProtectedRoute>
           }
         />
-      {/* Orders */}
-          <Route
-          path="/orders" element={<Dashboard comp={<Orders />} />}
+        {/* Orders - protected: any logged-in user */}
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <Dashboard comp={<Orders />} />
+            </ProtectedRoute>
+          }
         />
 
-         {/* WishList */}
-          <Route
-          path="/wishlist" element={<Dashboard comp={<WishList />} />}
+        {/* Wishlist - protected: any logged-in user */}
+        <Route
+          path="/wishlist"
+          element={
+            <ProtectedRoute>
+              <Dashboard comp={<WishList />} />
+            </ProtectedRoute>
+          }
         />
 
         {/* 404 */}

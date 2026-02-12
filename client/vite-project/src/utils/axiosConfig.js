@@ -1,9 +1,9 @@
 import axios from "axios";
 
 // Create axios instance
-const api = axios.create({
-  baseURL: "http://localhost:3000",
-});
+const baseURL = "http://localhost:3000";
+const api = axios.create({ baseURL });
+export { baseURL };
 
 // Request interceptor to add token to headers
 api.interceptors.request.use(

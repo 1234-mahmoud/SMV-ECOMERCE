@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createProduct } from "../store/productSlice";
+import { fetchCategories } from "../store/categorySlice";
 
 export default function CreateProduct() {
   const dispatch = useDispatch();
   const { status, error } = useSelector((state) => state.products);
+  const { list: categories } = useSelector((state) => state.categories);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -118,12 +124,11 @@ export default function CreateProduct() {
           onChange={(e) => setCategory(e.target.value)}
         >
           <option value="">Select a category</option>
-          <option value="Electronics">Electronics</option>
-          <option value="Clothing">Clothing</option>
-          <option value="Books">Books</option>
-          <option value="Home & Garden">Home & Garden</option>
-          <option value="Sports">Sports</option>
-          <option value="Other">Other</option>
+          {categories.map((c) => (
+            <option key={c._id} value={c._id}>
+              {c.name}
+            </option>
+          ))}
         </select>
       </div>
       <div className="block_box">

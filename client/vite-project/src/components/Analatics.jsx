@@ -1,5 +1,13 @@
 import React from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 const data = [
   { month: "Jan", sales: 12, orders: 5 },
@@ -12,15 +20,17 @@ const data = [
 
 export default function Analatics() {
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={data}>
-        <XAxis dataKey="month" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="sales" fill="#1976d2" />
-        <Bar dataKey="orders" fill="#f50057" />
-      </BarChart>
-    </ResponsiveContainer>
+    <div className={`w-full lg:w-120`}>
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={data}>
+          <XAxis dataKey="month" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="sales" fill="#1976d2" />
+          <Bar dataKey="orders" fill="#f50057" />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 }

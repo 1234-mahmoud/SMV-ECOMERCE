@@ -19,17 +19,20 @@ const ProductSchema = new mongoose.Schema({
         required: true,
         min: 0
     },
-    images: [String],   // image URLs or file paths
+    images: [String],
+
     category: {
-        type: String,
-        default: ""
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "category",
+        required: true
     },
+
     sellerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     }
 }, {
-    timestamps: true  // Adds createdAt and updatedAt fields
+    timestamps: true
 });
 
 const ProductModel = mongoose.model("product", ProductSchema);

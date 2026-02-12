@@ -4,6 +4,7 @@ import headerReducer from './headerSlice'
 import cartReducer from './cartSlice'
 import productReducer from "./productSlice";
 import authReducer from "./authSlice";
+import categoryReducer from "./categorySlice";
 
 // Middleware to save cart to localStorage whenever cart state changes
 const cartPersistenceMiddleware = (store) => (next) => (action) => {
@@ -25,10 +26,11 @@ const cartPersistenceMiddleware = (store) => (next) => (action) => {
 export const store = configureStore({
   reducer: {
     sidebar: sidebarReducer,
-    header:headerReducer,
-    cart:cartReducer,
+    header: headerReducer,
+    cart: cartReducer,
     products: productReducer,
     auth: authReducer,
+    categories: categoryReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(cartPersistenceMiddleware),
