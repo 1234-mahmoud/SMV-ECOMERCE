@@ -23,14 +23,14 @@ export default function Cart() {
                         return (
                         <div
                             className={`product 
-                                w-full lg:w-150
+                                w-full md:w-150
                                 flex items-center gap-10 
                             shadow-[0_0_25px_rgba(0,0,0,0.15)] p-3 rounded-md 
                             flex-col md:flex-row md:flex-wrap`}
                             key={itemId}
                         >
                             <div
-                                className={`img w-30 relative h-30 overflow-hidden rounded-md shrink-0`}
+                                className={`img w-40 relative h-40 overflow-hidden rounded-md shrink-0`}
                             >
                                 <img 
                                     src={
@@ -86,7 +86,7 @@ export default function Cart() {
                                     </span>
 
                                     <button
-                                        className={`text-white text-lg font-semibold rounded-md bg-red-500 w-50 p-2`}
+                                        className={`text-white text-lg font-semibold rounded-md bg-red-500 w-35 md:w-50 p-2`}
                                         onClick={() => dispatch(removeFromCart(itemId))}
                                     >
                                         Remove
