@@ -8,13 +8,14 @@ import { Provider, useDispatch } from "react-redux";
 import { store } from "./store/Store.js";
 import { verifyToken } from "./store/authSlice";
 
-// Component to verify token on app load
+// Restore login on reload: verify token when we have one in localStorage
 function AppWithAuth() {
   const dispatch = useDispatch();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
+    const userStr = localStorage.getItem("user");
+    if (token && userStr) {
       dispatch(verifyToken());
     }
   }, [dispatch]);

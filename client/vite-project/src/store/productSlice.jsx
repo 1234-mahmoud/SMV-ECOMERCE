@@ -1,11 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// Thunk --> for fetching products from DB
+// Thunk --> for fetching products from DB (optional category filter)
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
-  async () => {
-    const res = await axios.get("http://localhost:3000/products");
+  async (categoryId = null) => {
+    const url = categoryId
+      ? `http://localhost:3000/products?category=${categoryId}`
+      : "http://localhost:3000/products";
+    const res = await axios.get(url);
     return res.data;
   }
 );

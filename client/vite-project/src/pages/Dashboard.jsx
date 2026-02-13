@@ -7,7 +7,40 @@ import {
   RiLuggageCartFill,
   RiServiceFill,
   RiLogoutBoxRFill,
+  RiGroup3Fill,
+  RiProfileFill,
+  RiAppsFill,
+  RiProductHuntFill,
 } from "react-icons/ri";
+
+const links = [
+  {
+    to: "/orders",
+    title: "Orders",
+    icon: RiLuggageCartFill,
+  },
+  {
+    to: "/users",
+    title: "Users",
+    icon: RiGroup3Fill,
+  },
+  {
+    to: "/sellersdata",
+    title: "Sellers",
+    icon: RiProfileFill,
+  },
+  {
+    to: "/categories",
+    title: "Categories",
+    icon: RiAppsFill,
+  },
+  {
+    to: "/products",
+    title: "Products",
+    icon: RiProductHuntFill,
+  },
+];
+
 
 export default function Dashboard({ comp }) {
   const dispatch = useDispatch();
@@ -16,8 +49,8 @@ export default function Dashboard({ comp }) {
 
   // 👇 وظيفة تسجيل الخروج
   const handleLogout = () => {
-    dispatch(logout());      // Clear user Data
-    navigate("/login");      // return to login page 
+    dispatch(logout()); // Clear user Data
+    navigate("/login"); // return to login page
   };
 
   return (
@@ -42,41 +75,30 @@ export default function Dashboard({ comp }) {
 
         {/* Links List*/}
         <div className="flex flex-col gap-5 p-5 mt-20 text-white font-semibold">
-          <Link
-            to="/orders"
-            className={`
-              flex items-center gap-3 transition-colors duration-300
-              hover:bg-white/10 rounded-md p-2 ${!isOpen && "justify-center"}
-            `}
-          >
-            <RiLuggageCartFill className="text-2xl shrink-0" />
-            <span
-              className={`
-                transition-all duration-300 whitespace-nowrap overflow-hidden
-                ${isOpen ? "opacity-100 w-auto" : "opacity-0 w-0"}
-              `}
-            >
-              My Orders
-            </span>
-          </Link>
+           {links.map((link, index) => {
+    const Icon = link.icon;
 
-          <Link
-            to="/wishlist"
-            className={`
-              flex items-center gap-3 transition-colors duration-300
-              hover:bg-white/10 rounded-md p-2 ${!isOpen && "justify-center"}
-            `}
-          >
-            <RiServiceFill className="text-2xl shrink-0" />
-            <span
-              className={`
-                transition-all duration-300 whitespace-nowrap overflow-hidden
-                ${isOpen ? "opacity-100 w-auto" : "opacity-0 w-0"}
-              `}
-            >
-              Wishlist
-            </span>
-          </Link>
+    return (
+      <Link
+        key={index}
+        to={link.to}
+        className={`
+          flex items-center gap-3 transition-colors duration-300
+          hover:bg-white/10 rounded-md p-2 ${!isOpen && "justify-center"}
+        `}
+      >
+        <Icon className="text-2xl shrink-0" />
+        <span
+          className={`
+            transition-all duration-300 whitespace-nowrap overflow-hidden
+            ${isOpen ? "opacity-100 w-auto" : "opacity-0 w-0"}
+          `}
+        >
+          {link.title}
+        </span>
+      </Link>
+    );
+  })}
 
           {/* Logout */}
           <button
@@ -100,10 +122,14 @@ export default function Dashboard({ comp }) {
       </div>
 
       {/* Main Content */}
-      <div className={`p-2 md:p-6 bg-gray-50 w-full
-      md:container md:m-auto
-        ${isOpen?"hidden":""}
-        `}>{comp}</div>
+      <div
+        className={`p-2 md:p-6 bg-gray-50 w-full
+      md:container md:mx-auto
+        ${isOpen ? "hidden md:block" : ""}
+        `}
+      >
+        {comp}
+      </div>
     </div>
   );
 }

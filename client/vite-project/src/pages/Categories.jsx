@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { baseURL } from "../utils/axiosConfig";
 import { fetchCategories } from "../store/categorySlice";
@@ -19,9 +20,10 @@ export default function Categories() {
           <span className={`text-lg font-semibold`}>Loading...</span>
         ) : (
           categories.map((c) => (
-            <div
+            <Link
+              to={`/products?category=${c._id}`}
               className={`bg-white rounded-md p-3 flex flex-col justify-center items-center gap-3 basis-80 h-75 
-                shadow-gray-400 shadow-xl
+                shadow-gray-400 shadow-xl hover:shadow-2xl transition-shadow cursor-pointer
                 `}
               key={c._id}
             >
@@ -35,7 +37,7 @@ export default function Categories() {
                 <div className={`w-24 h-24 shrink-0 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm`} aria-hidden />
               )}
               <span className={`text-lg font-semibold`}>{c.name}</span>
-            </div>
+            </Link>
           ))
         )}
       </div>

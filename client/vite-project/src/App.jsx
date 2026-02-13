@@ -13,6 +13,8 @@ import Orders from "./components/Orders";
 import WishList from "./components/WishList";
 import CreateProduct from "./pages/CreateProduct";
 import Admin from "./pages/Admin";
+import Users from "./pages/Users";
+import SellersData from './pages/SellersData'
 
 function App() {
   return (
@@ -64,6 +66,37 @@ function App() {
             </ProtectedRoute>
           }
         />
+{/*users - Admin only so customer data loads */}
+        <Route
+          path="/users"
+          element={
+            <ProtectedRoute role="Admin">
+              <Dashboard comp={<Users />} />
+            </ProtectedRoute>
+          }
+        />
+
+{/*sellers data*/}
+        <Route
+          path="/sellersdata"
+          element={
+            <ProtectedRoute>
+              <Dashboard comp={<SellersData />} />
+            </ProtectedRoute>
+          }
+        />
+
+        {/*categories*/}
+        <Route
+          path="/categories"
+          element={
+            <ProtectedRoute>
+              <Dashboard comp={<Categories />} />
+            </ProtectedRoute>
+          }
+        />
+
+
 
         {/* Wishlist - protected: any logged-in user */}
         <Route

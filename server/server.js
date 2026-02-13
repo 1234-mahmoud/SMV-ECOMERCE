@@ -63,6 +63,15 @@ const ProductSchema = new mongoose.Schema({
   sellerId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 
+const OrderSchema = new mongoose.Schema({
+  customerId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  items: Array,
+  totalAmount: Number,
+  status: String,
+  createdAt: { type: Date, default: Date.now },
+});
+const OrderModel = mongoose.model("Order", OrderSchema);
+
 const UserModel = mongoose.model("User", UserSchema);
 const CategoryModel = mongoose.model("Category", CategorySchema);
 const ProductModel = mongoose.model("Product", ProductSchema);
@@ -157,12 +166,25 @@ app.post("/login", async (req, res) => {
     const token = jwt.sign(
       { userId: user._id, email: user.email, role: user.role },
       JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "7d" }
     );
 
     res.status(200).json({
       message: "Login successful",
       token,
+      user: { id: user._id, name: user.name, email: user.email, role: user.role }
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Verify token (keep user logged in on page reload)
+app.get("/verifyToken", authenticateToken, async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user.userId).select("name email role");
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.status(200).json({
       user: { id: user._id, name: user.name, email: user.email, role: user.role }
     });
   } catch (error) {
@@ -240,11 +262,126 @@ app.post("/createProduct", authenticateToken, upload.single("image"), async (req
   }
 });
 
-// Get All Products
+// Get All Products (optional filter by category)
 app.get("/products", async (req, res) => {
   try {
-    const products = await ProductModel.find().populate("category");
+    const { category } = req.query;
+    const filter = category ? { category } : {};
+    const products = await ProductModel.find(filter).populate("category");
     res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ================== ADMIN ROUTES ==================
+
+// Admin stats (users, sellers, products, categories counts)
+app.get("/admin/stats", authenticateToken, async (req, res) => {
+  try {
+    if (req.user.role !== "Admin") {
+      return res.status(403).json({ error: "Admin only" });
+    }
+    const [usersCount, sellersCount, productsCount, categoriesCount] = await Promise.all([
+      UserModel.countDocuments({ role: "User" }),
+      UserModel.countDocuments({ role: "Seller" }),
+      ProductModel.countDocuments(),
+      CategoryModel.countDocuments(),
+    ]);
+    res.status(200).json({
+      usersCount,
+      sellersCount,
+      productsCount,
+      categoriesCount,
+      adminsCount: await UserModel.countDocuments({ role: "Admin" }),
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Admin: list customers (all users who are not Admin/Seller) – real data from DB
+app.get("/admin/users", authenticateToken, async (req, res) => {
+  try {
+    if (req.user.role !== "Admin") return res.status(403).json({ error: "Admin only" });
+    // Include User, user, or any role that is not Admin/Seller (customers)
+    const users = await UserModel.find({
+      $or: [
+        { role: "User" },
+        { role: { $exists: false } },
+        { role: null },
+        { role: "" },
+        { role: "user" },
+        { role: "Customer" },
+        { role: "customer" },
+      ],
+    })
+      .select("name email _id role")
+      .lean();
+    const withStats = await Promise.all(
+      users.map(async (u) => {
+        const orders = await OrderModel.find({ customerId: u._id }).lean();
+        const numberOfPurchases = orders.length;
+        const totalPrice = orders.reduce((sum, o) => sum + (Number(o.totalAmount) || 0), 0);
+        return { ...u, numberOfPurchases, totalPrice };
+      })
+    );
+    res.status(200).json(withStats);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Admin: add a new customer (user with role User)
+app.post("/admin/users", authenticateToken, async (req, res) => {
+  try {
+    if (req.user.role !== "Admin") return res.status(403).json({ error: "Admin only" });
+    const { name, email, password } = req.body;
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: "Name, email and password are required" });
+    }
+    const existing = await UserModel.findOne({ email });
+    if (existing) return res.status(400).json({ error: "Email already registered" });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new UserModel({
+      name,
+      email,
+      password: hashedPassword,
+      role: "User",
+    });
+    await user.save();
+    res.status(201).json({
+      message: "Customer added successfully",
+      user: { _id: user._id, name: user.name, email: user.email, role: user.role },
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Admin: list sellers – real data from DB
+app.get("/admin/sellers", authenticateToken, async (req, res) => {
+  try {
+    if (req.user.role !== "Admin") return res.status(403).json({ error: "Admin only" });
+    const sellers = await UserModel.find({ role: "Seller" }).select("name email _id").lean();
+    const withStats = await Promise.all(
+      sellers.map(async (s) => {
+        const productsCount = await ProductModel.countDocuments({ sellerId: s._id });
+        return { ...s, productsCount };
+      })
+    );
+    res.status(200).json(withStats);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Admin: list admins – real data from DB
+app.get("/admin/admins", authenticateToken, async (req, res) => {
+  try {
+    if (req.user.role !== "Admin") return res.status(403).json({ error: "Admin only" });
+    const admins = await UserModel.find({ role: "Admin" }).select("name email _id role").lean();
+    res.status(200).json(admins);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -8,7 +8,7 @@ export default function Home() {
       <Hero />
       <div className="container m-auto">
         <Categories />
-        <Products />
+        {/* <Products /> */}
       </div>
     </div>
   );

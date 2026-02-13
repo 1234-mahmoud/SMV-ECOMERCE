@@ -1,21 +1,29 @@
 import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../store/productSlice";
 import { addToCart } from "../store/cartSlice";
 
 export default function Products() {
+  const [searchParams] = useSearchParams();
+  const categoryId = searchParams.get("category");
   const dispatch = useDispatch();
   const { products, status } = useSelector((state) => state.products);
 
   useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
+    dispatch(fetchProducts(categoryId || null));
+  }, [dispatch, categoryId]);
 
   if (status === "loading") return <p>Loading...</p>;
 
   return (
     <div className="section-margin bg-gray-50 p-4">
-      <h1 className="main-title font-bold my-5">Featured Products</h1>
+      <h1 className="main-title font-bold my-5">
+        {categoryId ? "Products in this category" : "Featured Products"}
+      </h1>
+      {products.length === 0 ? (
+        <p className="text-gray-500">No products found.</p>
+      ) : (
       <div className="flex justify-center items-center gap-5 flex-wrap">
         {products.map((p) => (
           <div
@@ -43,6 +51,7 @@ export default function Products() {
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 }
