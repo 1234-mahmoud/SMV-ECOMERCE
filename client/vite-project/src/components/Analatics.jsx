@@ -56,7 +56,7 @@ export default function Analatics() {
         {loading ? (
           <span className="col-span-full text-gray-500">Loading stats...</span>
         ) : (
-          <>
+          <div>
             <div className="bg-white rounded-lg shadow p-4 border border-gray-200">
               <p className="text-gray-500 text-sm font-medium">Users</p>
               <p className="text-2xl font-bold text-indigo-600">{stats.usersCount}</p>
@@ -77,7 +77,7 @@ export default function Analatics() {
               <p className="text-gray-500 text-sm font-medium">Admins</p>
               <p className="text-2xl font-bold text-violet-600">{stats.adminsCount}</p>
             </div>
-          </>
+          </div>
         )}
       </div>
 

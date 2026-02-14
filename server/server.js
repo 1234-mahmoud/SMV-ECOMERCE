@@ -387,6 +387,58 @@ app.get("/admin/admins", authenticateToken, async (req, res) => {
   }
 });
 
+// ================== SELLER ROUTES ==================
+
+// Seller stats – real data from DB (products count, orders containing seller's products, chart)
+app.get("/seller/stats", authenticateToken, async (req, res) => {
+  try {
+    if (req.user.role !== "Seller") return res.status(403).json({ error: "Seller only" });
+    const sellerId = req.user.userId;
+
+    const productsCount = await ProductModel.countDocuments({ sellerId });
+
+    const myProductIds = await ProductModel.find({ sellerId }).select("_id").lean().then((p) => p.map((x) => x._id));
+
+    let ordersCount = 0;
+    let chartData = [];
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const now = new Date();
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      chartData.push({ month: monthNames[d.getMonth()], sales: 0, orders: 0, year: d.getFullYear() });
+    }
+
+    const orders = await OrderModel.find().lean();
+    for (const order of orders) {
+      const items = order.items || [];
+      const hasMyProduct = items.some((item) => {
+        const pid = item.productId || item.product;
+        return pid && myProductIds.some((id) => id.toString() === pid.toString());
+      });
+      if (hasMyProduct) {
+        ordersCount++;
+        const orderDate = order.createdAt ? new Date(order.createdAt) : new Date();
+        const monthKey = `${orderDate.getFullYear()}-${orderDate.getMonth()}`;
+        const chartItem = chartData.find(
+          (c) => c.year === orderDate.getFullYear() && monthNames[orderDate.getMonth()] === c.month
+        );
+        if (chartItem) {
+          chartItem.orders += 1;
+          chartItem.sales += Number(order.totalAmount) || 0;
+        }
+      }
+    }
+
+    res.status(200).json({
+      productsCount,
+      ordersCount,
+      chartData,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // ================== START SERVER ==================
 const startServer = async () => {
   await connectDB();

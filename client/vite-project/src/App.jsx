@@ -13,8 +13,9 @@ import Orders from "./components/Orders";
 import WishList from "./components/WishList";
 import CreateProduct from "./pages/CreateProduct";
 import Admin from "./pages/Admin";
+import SellerDashboard from "./pages/SellerDashboard";
 import Users from "./pages/Users";
-import SellersData from './pages/SellersData'
+import SellersData from "./pages/SellersData";
 
 function App() {
   return (
@@ -53,7 +54,7 @@ function App() {
           path="/seller/dashboard"
           element={
             <ProtectedRoute role="Seller">
-              <Dashboard comp={<CreateProduct/>} />
+              <Dashboard comp={<SellerDashboard />} />
             </ProtectedRoute>
           }
         />

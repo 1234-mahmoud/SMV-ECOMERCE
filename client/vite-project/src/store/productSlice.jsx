@@ -1,27 +1,23 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import api from "../utils/axiosConfig";
 
 // Thunk --> for fetching products from DB (optional category filter)
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async (categoryId = null) => {
-    const url = categoryId
-      ? `http://localhost:3000/products?category=${categoryId}`
-      : "http://localhost:3000/products";
-    const res = await axios.get(url);
+    const url = categoryId ? `/products?category=${categoryId}` : "/products";
+    const res = await api.get(url);
     return res.data;
   }
 );
 
-// Thunk --> for adding new product 
+// Thunk --> for adding new product (uses api so token is sent)
 export const createProduct = createAsyncThunk(
   "products/createProduct",
   async (productData, { rejectWithValue }) => {
     try {
-      const res = await axios.post("http://localhost:3000/createProduct", productData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
-      return res.data.product || res.data; // Return the product object
+      const res = await api.post("/createProduct", productData);
+      return res.data.product || res.data;
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.error || error.message || "Failed to create product"
