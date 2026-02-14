@@ -8,7 +8,7 @@ export default function Cart() {
 
     return (
         <div className={`container mx-auto my-10 p-3
-        flex flex-col justify-center items-center gap-10
+        flex flex-col justify-center items-center gap-10 
         `}>
             <h1 className="text-2xl font-bold my-10">Shopping Cart</h1>
             <h3 className={`font-semibold text-xl`}>Total Cart Price: <span className="text-blue-600">${totalAmount.toFixed(3)}</span></h3>
@@ -23,7 +23,7 @@ export default function Cart() {
                         return (
                         <div
                             className={`product 
-                                w-full md:w-150
+                                w-70 md:w-150
                                 flex items-center gap-10 
                             shadow-[0_0_25px_rgba(0,0,0,0.15)] p-3 rounded-md 
                             flex-col md:flex-row md:flex-wrap`}
@@ -86,7 +86,7 @@ export default function Cart() {
                                     </span>
 
                                     <button
-                                        className={`text-white text-lg font-semibold rounded-md bg-red-500 w-35 md:w-50 p-2`}
+                                        className={`text-white text-lg font-semibold rounded-md bg-red-500 w-25 md:w-50 p-2`}
                                         onClick={() => dispatch(removeFromCart(itemId))}
                                     >
                                         Remove
