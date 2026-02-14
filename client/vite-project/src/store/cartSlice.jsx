@@ -28,32 +28,32 @@ const cartSlice = createSlice({
   reducers: {
     addToCart(state, action) {
       const product = action.payload;
-      // Normalize ID: use _id if id doesn't exist (MongoDB uses _id)
-      const productId = product.id || product._id;
+      const qty = Math.max(1, Number(product.quantity) || 1);
+      const productId = String(product.id || product._id);
       const existingItem = state.items.find(
-        (item) => (item.id || item._id) === productId
+        (item) => String(item.id || item._id) === productId
       );
 
       if (existingItem) {
-        existingItem.quantity++;
-        existingItem.totalPrice += product.price;
+        existingItem.quantity += qty;
+        existingItem.totalPrice += product.price * qty;
       } else {
         state.items.push({
           ...product,
-          id: productId, // Ensure id field exists
-          _id: product._id, // Keep _id for reference
-          quantity: 1,
-          totalPrice: product.price,
+          id: productId,
+          _id: product._id,
+          quantity: qty,
+          totalPrice: product.price * qty,
         });
       }
 
-      state.totalAmount += product.price;
+      state.totalAmount += product.price * qty;
     },
 
     increment(state, action) {
-      const itemId = action.payload;
+      const itemId = String(action.payload);
       const item = state.items.find(
-        (item) => (item.id || item._id) === itemId
+        (item) => String(item.id || item._id) === itemId
       );
 
       if (!item) return;
@@ -64,17 +64,16 @@ const cartSlice = createSlice({
     },
 
     decrement(state, action) {
-      const itemId = action.payload;
+      const itemId = String(action.payload);
       const item = state.items.find(
-        (item) => (item.id || item._id) === itemId
+        (item) => String(item.id || item._id) === itemId
       );
 
       if (!item) return;
 
       if (item.quantity === 1) {
-        const itemIdentifier = item.id || item._id;
         state.items = state.items.filter(
-          (i) => (i.id || i._id) !== itemIdentifier
+          (i) => String(i.id || i._id) !== itemId
         );
         state.totalAmount -= item.price;
       } else {
@@ -85,16 +84,16 @@ const cartSlice = createSlice({
     },
 
     removeFromCart(state, action) {
-      const itemId = action.payload;
+      const itemId = String(action.payload);
       const item = state.items.find(
-        (item) => (item.id || item._id) === itemId
+        (item) => String(item.id || item._id) === itemId
       );
 
       if (!item) return;
 
       state.totalAmount -= item.totalPrice;
       state.items = state.items.filter(
-        (i) => (i.id || i._id) !== itemId
+        (i) => String(i.id || i._id) !== itemId
       );
     },
 

@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Categories from "./pages/Categories";
 import Products from "./pages/Products";
+import ProductDetails from "./pages/ProductDetails";
 import Orders from "./components/Orders";
 import WishList from "./components/WishList";
 import CreateProduct from "./pages/CreateProduct";
@@ -28,6 +29,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/products/:id" element={<ProductDetails />} />
 
         {/* Cart (any logged user) */}
         <Route

@@ -64,7 +64,7 @@ export default function SellerAnalytics() {
           </>
         )}
       </div>
-<div className={`w-full md:w-100`}>
+<div className={`w-full md:w-100up`}>
 
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData}>

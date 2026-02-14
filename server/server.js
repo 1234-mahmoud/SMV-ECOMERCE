@@ -274,6 +274,17 @@ app.get("/products", async (req, res) => {
   }
 });
 
+// Get single product by ID
+app.get("/products/:id", async (req, res) => {
+  try {
+    const product = await ProductModel.findById(req.params.id).populate("category");
+    if (!product) return res.status(404).json({ error: "Product not found" });
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // ================== ADMIN ROUTES ==================
 
 // Admin stats (users, sellers, products, categories counts)
