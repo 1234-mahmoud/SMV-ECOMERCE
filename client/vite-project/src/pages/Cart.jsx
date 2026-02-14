@@ -11,7 +11,7 @@ export default function Cart() {
         flex flex-col justify-center items-center gap-10
         `}>
             <h1 className="text-2xl font-bold my-10">Shopping Cart</h1>
-            <h3>Total Cart Price: ${totalAmount}</h3>
+            <h3 className={`font-semibold text-xl`}>Total Cart Price: <span className="text-blue-600">${totalAmount.toFixed(3)}</span></h3>
 
             <div
                 className={`flex justify-center items-center gap-5
@@ -109,7 +109,7 @@ export default function Cart() {
                         className={`flex justify-between items-center py-2 border-b border-b-gray-400`}
                     >
                         <span>Subtotal</span>
-                        <span>{totalAmount}$</span>
+                        <span>{totalAmount.toFixed(3)}$</span>
                     </div>
 
                     <div
