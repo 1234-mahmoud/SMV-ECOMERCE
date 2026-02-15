@@ -9,7 +9,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import CreateCategory from "./CreateCategory";
 
 const chartData = [
   { month: "Jan", sales: 12, orders: 5 },
@@ -51,13 +50,13 @@ export default function Analatics() {
   }, []);
 
   return (
-    <div className={`w-full  flex flex-col  gap-6`}>
+    <div className={`w-full lg:w-120 flex flex-col gap-6`}>
       {/* Real stats from DB */}
-      <div className="">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {loading ? (
           <span className="col-span-full text-gray-500">Loading stats...</span>
         ) : (
-          <div className={`w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3`}>
+          <div>
             <div className="bg-white rounded-lg shadow p-4 border border-gray-200">
               <p className="text-gray-500 text-sm font-medium">Users</p>
               <p className="text-2xl font-bold text-indigo-600">{stats.usersCount}</p>
@@ -81,8 +80,6 @@ export default function Analatics() {
           </div>
         )}
       </div>
-      <div className={`flex flex-col lg:flex-row justify-center items-center gap-8`}>
-<div className={`w-full lg:w-120`}>
 
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData}>
@@ -94,9 +91,6 @@ export default function Analatics() {
           <Bar dataKey="orders" fill="#f50057" />
         </BarChart>
       </ResponsiveContainer>
-</div>
-<CreateCategory/>
-      </div>
     </div>
   );
 }
