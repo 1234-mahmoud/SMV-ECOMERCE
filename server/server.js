@@ -40,41 +40,11 @@ app.use((req, res, next) => {
 });
 
 // ================== MODELS ==================
-const UserSchema = new mongoose.Schema({
-  name: String,
-  email: { type: String, unique: true },
-  password: String,
-  role: { type: String, default: "User" },
-});
-
-const CategorySchema = new mongoose.Schema({
-  name: { type: String, required: true, unique: true },
-  parentCategory: { type: mongoose.Schema.Types.ObjectId, ref: "Category", default: null },
-  image: { type: String, default: null },
-});
-
-const ProductSchema = new mongoose.Schema({
-  title: String,
-  description: String,
-  price: Number,
-  stock: Number,
-  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
-  images: [String],
-  sellerId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-});
-
-const OrderSchema = new mongoose.Schema({
-  customerId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  items: Array,
-  totalAmount: Number,
-  status: String,
-  createdAt: { type: Date, default: Date.now },
-});
-const OrderModel = mongoose.model("Order", OrderSchema);
-
-const UserModel = mongoose.model("User", UserSchema);
-const CategoryModel = mongoose.model("Category", CategorySchema);
-const ProductModel = mongoose.model("Product", ProductSchema);
+// Load models from the models/ folder for better organization
+const UserModel = require("./models/userSchema");
+const CategoryModel = require("./models/categorySchema");
+const ProductModel = require("./models/productSchema");
+const OrderModel = require("./models/orderSchema");
 
 // ================== JWT SECRET ==================
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
@@ -282,8 +252,9 @@ app.delete("/products/:id", authenticateToken, async (req, res) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    // Check if the user is the seller or admin
-    if (product.sellerId.toString() !== req.user.userId && req.user.role !== "admin") {
+    // Check if the user is the seller or admin (case-insensitive role check)
+    const userRole = String(req.user.role || "").toLowerCase();
+    if (product.sellerId.toString() !== req.user.userId && userRole !== "admin") {
       return res.status(403).json({ error: "Not authorized to delete this product" });
     }
 
@@ -304,8 +275,9 @@ app.put("/products/:id", authenticateToken, upload.single("image"), async (req, 
       return res.status(404).json({ error: "Product not found" });
     }
 
-    // Check if the user is the seller or admin
-    if (product.sellerId.toString() !== req.user.userId && req.user.role !== "admin") {
+    // Check if the user is the seller or admin (case-insensitive role check)
+    const userRole = String(req.user.role || "").toLowerCase();
+    if (product.sellerId.toString() !== req.user.userId && userRole !== "admin") {
       return res.status(403).json({ error: "Not authorized to update this product" });
     }
 

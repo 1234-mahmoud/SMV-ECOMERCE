@@ -58,7 +58,7 @@ export const verifyToken = createAsyncThunk(
 
       const res = await axios.get(`${API_URL}/verifyToken`, {
         headers: {
-          Authorization: `Bearer ${token}`,   // ✅ التصحيح هنا
+          Authorization: `Bearer ${token}`,   
         },
       });
 

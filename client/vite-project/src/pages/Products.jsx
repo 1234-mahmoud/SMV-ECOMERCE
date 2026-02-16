@@ -13,7 +13,7 @@ export default function Products() {
   const [editingProduct, setEditingProduct] = useState(null);
   const [editFormData, setEditFormData] = useState({ title: "", price: "", image: null });
 
-  const isSeller = user?.role === "Seller" || user?.role === "seller";
+  const notCustomer = user?.role === "Seller" || user?.role === "seller" || user?.role === "Admin" || user?.role === "admin";
 
   useEffect(() => {
     dispatch(fetchProducts(categoryId || null));
@@ -49,7 +49,7 @@ export default function Products() {
             </Link>
             <span className="text-lg font-semibold">{p.title}</span>
             <span className="text-md font-bold text-indigo-500">{p.price}$</span>
-            {isSeller ? (
+            {notCustomer ? (
               <div className="flex gap-2">
                 <button
                   className="p-2 bg-green-500 rounded-md text-white font-semibold flex-1"

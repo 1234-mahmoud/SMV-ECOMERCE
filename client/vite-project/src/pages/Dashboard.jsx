@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSidebar } from "../store/sidebarSlice";
-import { logout } from "../store/authSlice"; // عدّل المسار حسب مشروعك
+import { logout } from "../store/authSlice"; 
 import {
   RiArrowLeftCircleLine,
   RiLuggageCartFill,
@@ -47,7 +47,7 @@ export default function Dashboard({ comp }) {
   const navigate = useNavigate();
   const isOpen = useSelector((state) => state.sidebar.isOpen);
 
-  // 👇 وظيفة تسجيل الخروج
+  
   const handleLogout = () => {
     dispatch(logout()); // Clear user Data
     navigate("/login"); // return to login page

@@ -50,13 +50,13 @@ export default function Analatics() {
   }, []);
 
   return (
-    <div className={`w-full lg:w-120 flex flex-col gap-6`}>
+    <div className={`flex flex-col gap-6`}>
       {/* Real stats from DB */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div>
         {loading ? (
           <span className="col-span-full text-gray-500">Loading stats...</span>
         ) : (
-          <div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             <div className="bg-white rounded-lg shadow p-4 border border-gray-200">
               <p className="text-gray-500 text-sm font-medium">Users</p>
               <p className="text-2xl font-bold text-indigo-600">{stats.usersCount}</p>
@@ -80,6 +80,7 @@ export default function Analatics() {
           </div>
         )}
       </div>
+<div className="w-full lg:w-120">
 
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData}>
@@ -91,6 +92,7 @@ export default function Analatics() {
           <Bar dataKey="orders" fill="#f50057" />
         </BarChart>
       </ResponsiveContainer>
+</div>
     </div>
   );
 }

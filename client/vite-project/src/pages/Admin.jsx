@@ -178,12 +178,16 @@ export default function Admin() {
   };
 
   return (
-    <div className="flex gap-10 flex-wrap">
-      <Analatics />
-      <CreateCategory />
+    <div className="flex gap-10 flex-col">
 
-      {/* Categories Management */}
-      <div className="bg-white p-6 rounded-lg shadow-xl">
+
+      <Analatics />
+    
+<div className="flex justify-center items-center flex-col gap-10">
+      <CreateCategory />
+  <div className={`flex  w-full items-center gap-10 flex-col xl:flex-row`}>
+  {/* Categories Management */}
+      <div className="bg-white w-full p-6 rounded-lg shadow-xl">
         <h2 className="text-xl font-bold mb-4">Manage Categories</h2>
         
         {/* Edit Category Modal */}
@@ -320,7 +324,7 @@ export default function Admin() {
       </div>
 
       {/* Sellers Management */}
-      <div className="bg-white p-6 rounded-lg shadow-xl">
+      <div className="bg-white w-full p-6 rounded-lg shadow-xl">
         <h2 className="text-xl font-bold mb-4">Manage Sellers</h2>
 
         {/* Edit Seller Modal */}
@@ -457,6 +461,9 @@ export default function Admin() {
           </div>
         )}
       </div>
+  </div>
+</div>
+    
     </div>
   );
 }
