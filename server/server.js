@@ -274,6 +274,58 @@ app.get("/products", async (req, res) => {
   }
 });
 
+// Delete Product
+app.delete("/products/:id", authenticateToken, async (req, res) => {
+  try {
+    const product = await ProductModel.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    // Check if the user is the seller or admin
+    if (product.sellerId.toString() !== req.user.userId && req.user.role !== "admin") {
+      return res.status(403).json({ error: "Not authorized to delete this product" });
+    }
+
+    await ProductModel.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "Product deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update Product
+app.put("/products/:id", authenticateToken, upload.single("image"), async (req, res) => {
+  try {
+    const { title, price, description, stock } = req.body;
+    
+    const product = await ProductModel.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    // Check if the user is the seller or admin
+    if (product.sellerId.toString() !== req.user.userId && req.user.role !== "admin") {
+      return res.status(403).json({ error: "Not authorized to update this product" });
+    }
+
+    // Update fields
+    if (title) product.title = title;
+    if (price) product.price = price;
+    if (description) product.description = description;
+    if (stock) product.stock = stock;
+    if (req.file) {
+      product.images = [`/uploads/${req.file.filename}`];
+    }
+
+    const updatedProduct = await product.save();
+
+    res.status(200).json({ message: "Product updated successfully", product: updatedProduct });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Get single product by ID
 app.get("/products/:id", async (req, res) => {
   try {
