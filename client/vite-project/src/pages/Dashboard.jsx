@@ -46,7 +46,9 @@ export default function Dashboard({ comp }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isOpen = useSelector((state) => state.sidebar.isOpen);
+  const user = useSelector((state) => state.auth.user);
 
+  const filteredLinks = links.filter(link => !(user?.role === 'Seller' && (link.title === 'Users' || link.title === 'Sellers')));
   
   const handleLogout = () => {
     dispatch(logout()); // Clear user Data
@@ -75,7 +77,7 @@ export default function Dashboard({ comp }) {
 
         {/* Links List*/}
         <div className="flex flex-col gap-5 p-5 mt-20 text-white font-semibold">
-           {links.map((link, index) => {
+           {filteredLinks.map((link, index) => {
     const Icon = link.icon;
 
     return (

@@ -132,7 +132,7 @@ app.post("/login", async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
-
+//create the token 
     const token = jwt.sign(
       { userId: user._id, email: user.email, role: user.role },
       JWT_SECRET,
