@@ -22,7 +22,7 @@ export default function CreateCategory() {
     setSuccessMessage("");
     setError("");
     setLoading(true);
-
+//to handle data same as <form></form> ,, upload data + image 
     try {
       const formData = new FormData();
       formData.append("name", name.trim());

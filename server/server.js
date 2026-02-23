@@ -193,7 +193,7 @@ app.get("/categories", async (req, res) => {
   try {
     const categories = await CategoryModel.find()
       .select("name parentCategory image")
-      .lean();
+      .lean(); //return Plain JavaScript Object --> it used if i don't need to save editablle changes
     res.status(200).json(categories);
   } catch (error) {
     res.status(500).json({ error: error.message });
