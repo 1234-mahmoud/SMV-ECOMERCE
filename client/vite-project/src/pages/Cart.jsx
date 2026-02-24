@@ -50,10 +50,10 @@ export default function Cart() {
                                 <span className={`text-xl font-bold text-gray-700`}>
                                     {p.title} 
                                 </span>
-
+{/* 
                                 <span className={`text-md font-semibold text-gray-500`}>
                                     By Ali Store
-                                </span>
+                                </span> */}
 
                                 <div className={`flex items-center gap-3`}>
                                     <button
