@@ -25,7 +25,6 @@ export default function Header() {
     navigate("/login");
   };
 
-  // تحديد الرابط والاسم حسب الدور
   let homeRoute = "/";
   let homeLabel = "Home";
 
@@ -42,7 +41,7 @@ export default function Header() {
   return (
     <div className="relative">
       <div className="flex justify-between items-center h-20 px-5 bg-[#1e293b] text-white">
-        {/* اللوجو */}
+        
         <Link
           to={homeRoute}
           className="text-lg font-semibold whitespace-nowrap lg:text-xl lg:font-bold"

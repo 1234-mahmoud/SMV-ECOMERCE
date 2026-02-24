@@ -28,8 +28,8 @@ const cartSlice = createSlice({
   reducers: {
     addToCart(state, action) {
       const product = action.payload;
-      const qty = Math.max(1, Number(product.quantity) || 1);
-      const productId = String(product.id || product._id);
+      const qty = Math.max(1, Number(product.quantity) || 1);//if their is a products --> return the num of it or 1
+      const productId = String(product.id || product._id); //as the returned id from db is str
       const existingItem = state.items.find(
         (item) => String(item.id || item._id) === productId
       );
@@ -40,8 +40,8 @@ const cartSlice = createSlice({
       } else {
         state.items.push({
           ...product,
-          id: productId,
-          _id: product._id,
+          id: productId,  // normalized ID (always string)
+          _id: product._id, // original MongoDB ID
           quantity: qty,
           totalPrice: product.price * qty,
         });
@@ -73,7 +73,7 @@ const cartSlice = createSlice({
 
       if (item.quantity === 1) {
         state.items = state.items.filter(
-          (i) => String(i.id || i._id) !== itemId
+          (i) => String(i.id || i._id) !== itemId //in the cart
         );
         state.totalAmount -= item.price;
       } else {

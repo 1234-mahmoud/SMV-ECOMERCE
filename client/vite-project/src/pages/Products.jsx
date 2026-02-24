@@ -5,7 +5,7 @@ import { fetchProducts, deleteProduct, updateProduct } from "../store/productSli
 import { addToCart } from "../store/cartSlice";
 
 export default function Products() {
-  const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();//used to deal with query in the url 
   const categoryId = searchParams.get("category");
   const dispatch = useDispatch();
   const { products, status } = useSelector((state) => state.products);
